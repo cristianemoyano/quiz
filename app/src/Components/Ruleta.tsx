@@ -4,7 +4,15 @@ import './Ruleta.css';
 
 
 const Ruleta = () => {
-    const { ruletaGrados, ruletaClass, isRuletaAnimated, girarRuleta, stopRuleta, categorySelected, trivia_categories } = useGlobalContext();
+    const {
+        ruletaGrados,
+        ruletaClass,
+        isRuletaAnimated,
+        girarRuleta,
+        stopRuleta,
+        categorySelected,
+        trivia_categories,
+    } = useGlobalContext();
     const btnColor = isRuletaAnimated ? 'gray' : 'yellow';
     const btnTextColor = isRuletaAnimated ? 'black' : 'white';
     const category = categorySelected && !isRuletaAnimated ? trivia_categories.find((element: any) => element.id === categorySelected).name : "Buscar...";

@@ -5,6 +5,7 @@ import { generateName } from "./utils";
 import correctAnswerAudio from './assets/sounds/correct_answer.mp3'
 import wrongAnswerAudio from './assets/sounds/wrong_answer.mp3'
 import backgroundAudio from './assets/sounds/background.mp3'
+import wheelAudio from './assets/sounds/wheel.mp3'
 
 
 
@@ -299,6 +300,10 @@ const AppProvider: React.FC<Props> = ({ children }) => {
     ]
 
     // ---- RULETA ----
+    const playWheel= () => {
+        let audio = new Audio(wheelAudio);
+        audio.play();
+    }
     const girarRuleta = () => {
 
         let categoryList = trivia_categories.map((item: any, index: any) => {
@@ -321,6 +326,7 @@ const AppProvider: React.FC<Props> = ({ children }) => {
 
 
         setIsRuletaAnimated(true);
+        playWheel();
         setRuletaGrados(ruleta_temp * premio)
 
         setTimeout(() => {

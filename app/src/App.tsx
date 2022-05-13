@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { AppContext, calculateScore, useAudio } from "./context";
+import { AppContext, calculateScore } from "./context";
 import { capFirst } from "./utils";
 import Form from "./Components/Form";
 import Loading from "./Components/Loading";
