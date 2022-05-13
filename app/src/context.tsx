@@ -4,6 +4,13 @@ import { useState, useContext, createContext } from "react";
 
 const API_ENDPOINT = "https://opentdb.com/api.php?";
 
+// TODO:
+// Scrap this api: https://opentdb.com/api.php?amount=100
+// Extract questions and answers
+// Translate it
+// Create a local db
+// Put that db.
+
 interface AppContextInterface {
     trivia_categories: any;
     difficulty_list: any;
@@ -35,13 +42,13 @@ interface Props {
 const translateQuestions = async (questions: any) => {
 
     const encodedParams = new URLSearchParams();
-    
+
     encodedParams.append("target", "es");
     encodedParams.append("source", "en");
     questions.forEach((item: any) => {
         encodedParams.append("q", item.question);
     });
-
+    // https://rapidapi.com/developer/billing/subscriptions-and-usage
     const apiKey: string = String(process.env.REACT_APP_RAPID_API_KEY);
     debugger
     const options = {
@@ -89,25 +96,39 @@ const AppProvider: React.FC<Props> = ({ children }) => {
              */
             if (response) {
                 const data = response.data.results;
-                let translatedQuestions:any = [];
-                translateQuestions(data).then(function(response) {
-                    let translations = response.data.data.translations;
-                    translatedQuestions = data.map((item: any, index:any) => {
-                        item.question = translations[index].translatedText;
-                        return item;
-                    });
+                const googleAPIEnabled: boolean = false;
+                if (googleAPIEnabled) {
+                    let translatedQuestions: any = [];
+                    translateQuestions(data).then(function (response) {
+                        let translations = response.data.data.translations;
+                        translatedQuestions = data.map((item: any, index: any) => {
+                            item.question = translations[index].translatedText;
+                            return item;
+                        });
 
-                    if (translatedQuestions.length > 0) {
-                        setQuestions(translatedQuestions);
-                        setLoading(false);
-                        setWaiting(false);
-                        setError(false);
-                    } else {
-                        setWaiting(true);
-                        setError(true);
-                    }
-                }).catch(function (error) {
-                    console.error(error);
+                        if (translatedQuestions.length > 0) {
+                            setQuestions(translatedQuestions);
+                            setLoading(false);
+                            setWaiting(false);
+                            setError(false);
+                        } else {
+                            setWaiting(true);
+                            setError(true);
+                        }
+                    }).catch(function (error) {
+                        console.error(error);
+                        if (data.length > 0) {
+                            setQuestions(data);
+                            setLoading(false);
+                            setWaiting(false);
+                            setError(false);
+                        } else {
+                            setWaiting(true);
+                            setError(true);
+                        }
+                    });
+                } else {
+                    console.log("Google API disabled.")
                     if (data.length > 0) {
                         setQuestions(data);
                         setLoading(false);
@@ -117,8 +138,8 @@ const AppProvider: React.FC<Props> = ({ children }) => {
                         setWaiting(true);
                         setError(true);
                     }
-                });
-                
+                }
+
             } else {
                 setWaiting(true);
             }
