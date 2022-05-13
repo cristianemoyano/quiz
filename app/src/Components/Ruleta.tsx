@@ -16,7 +16,7 @@ const Ruleta = () => {
                 <img
                     id="img-ruleta"
                     src={ruletaImg}
-                    style={{ transform: 'rotate(' + ruletaGrados + 'deg)', WebkitTransform: 'rotate(' + ruletaGrados + 'deg)' }}
+                    style={{ transform: 'rotate(' + ruletaGrados + 'deg)', WebkitTransform: 'rotate(' + ruletaGrados + 'deg)', height: 500 }}
                     alt="Ruleta"
                     onTransitionEnd={(e)=>{
                         stopRuleta()
