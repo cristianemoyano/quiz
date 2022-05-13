@@ -1,8 +1,8 @@
-import { ReactElement, JSXElementConstructor, ReactFragment, ReactPortal } from "react";
 import { useGlobalContext } from "../context";
+import Ruleta from "./Ruleta";
 
 const Form = () => {
-  const { trivia_categories, difficulty_list, quiz_type, quiz, handleSubmit, handleChange, error } = useGlobalContext();
+  const { trivia_categories, difficulty_list, quiz_type, quiz, handleSubmit, handleChange, error, setRandomUsername } = useGlobalContext();
 
   let categories = trivia_categories.map((item: { id: number; name: string; }, index: any) => (
     <option value={item.id} key={index}>{item.name}</option>
@@ -15,11 +15,36 @@ const Form = () => {
   ));
   return (
     <div className="justify-center flex items-center min-h-screen ">
+      <Ruleta />
       <form
         onSubmit={handleSubmit}
         className="bg-white p-5 md:p-8 max-w-[500px] space-y-8 shadow rounded-lg w-11/12 "
       >
         <h2 className="text-3xl font-medium">Iniciar Quiz</h2>
+        <div className="flex flex-col space-y-2">
+          <label className="text-gray-600 font-medium" htmlFor="username">
+            Nombre:
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Tu nombre o el nombre de tu equipo.."
+            className="bg-gray-200 p-2 rounded-md outline-0 focus:bg-gray-300"
+            onChange={handleChange}
+            value={quiz.username}
+            required={true}
+          />
+        </div>
+        <button
+          onClick={(e) => {
+            e.preventDefault()
+            setRandomUsername()
+          }}
+          className="bg-blue-500 rounde-md p-2 text-white hover:bg-cian-500"
+        >
+          Generar
+        </button>
         <div className="flex flex-col space-y-2">
           <label className="text-gray-600 font-medium" htmlFor="amount">
             Cantidad de Preguntas

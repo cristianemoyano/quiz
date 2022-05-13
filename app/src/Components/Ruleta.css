@@ -1,0 +1,36 @@
+#img-ruleta {
+    position: relative;
+    z-index: 1;
+}
+
+.img-ruleta {
+    /*animation-name: infinite-spinning;
+    animation-duration: 4s;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;*/
+    /*animation-iteration-count: infinite;*/
+    transition: all 4s ease;
+    overflow-x: hidden
+}
+
+.ruleta-puntos {
+    color: #fff;
+    text-shadow: 1px 1px 1px #ff2244;
+    text-transform: uppercase;
+}
+
+@keyframes infinite-spinning {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        /*transform: rotate(360deg);*/
+        transform: rotate(1100deg);
+    }
+}
+
+.blurry-text {
+    color: transparent;
+    text-shadow: 0 0 15px rgba(0,0,0,0.5);
+ }

@@ -1,5 +1,7 @@
 import axios from "axios";
+import React from "react";
 import { useState, useContext, createContext } from "react";
+import { generateName } from "./utils";
 
 
 const API_ENDPOINT = "https://opentdb.com/api.php?";
@@ -28,6 +30,13 @@ interface AppContextInterface {
     quiz: any;
     handleChange: Function;
     handleSubmit: Function;
+    ruletaGrados: number;
+    isRuletaAnimated: boolean;
+    girarRuleta: Function;
+    ruletaClass: boolean;
+    stopRuleta: Function;
+    categorySelected: number;
+    setRandomUsername: Function
 
 }
 
@@ -36,6 +45,11 @@ export const AppContext = createContext<AppContextInterface | any>(null);
 interface Props {
     // any props that come into the component
     children: any
+}
+
+
+export const calculateScore = (correct: number, questions: Array<any>) => {
+    return Number(((correct / questions.length) * 100).toFixed(0));
 }
 
 
@@ -67,7 +81,15 @@ const translateQuestions = async (questions: any) => {
 
 
 
+
+
 const AppProvider: React.FC<Props> = ({ children }) => {
+    const [isRuletaAnimated, setIsRuletaAnimated] = useState(false);
+    const [ruletaGrados, setRuletaGrados] = useState(0);
+    const [ruletsData, setRuletsData] = useState(0);
+    const [ruletaClass, setRuletaClass] = useState(false);
+    const [categorySelected, setCategory] = useState(0);
+
     const [waiting, setWaiting] = useState(true);
     const [loading, setLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,7 +102,15 @@ const AppProvider: React.FC<Props> = ({ children }) => {
         category: 9,
         difficulty: "easy",
         type: "any",
+        username: "",
     });
+
+    const setRandomUsername = () => {
+        let name = 'username';
+        let randomeName = generateName();
+        setQuiz({ ...quiz, [name]: randomeName });
+    }
+
 
     const fetchApi = async (url: any) => {
         setWaiting(false);
@@ -175,6 +205,7 @@ const AppProvider: React.FC<Props> = ({ children }) => {
         setIndex(0);
         setCorrect(0);
         setWaiting(true);
+        setCategory(0);
     };
 
     const trivia_categories = [
@@ -215,6 +246,47 @@ const AppProvider: React.FC<Props> = ({ children }) => {
         { "id": "multiple", "name": "Multiple Opción" },
     ]
 
+    // ---- RULETA ----
+    const girarRuleta = () => {
+
+        let categoryList = trivia_categories.map((item: any, index: any) => {
+            return item.id;
+        });
+
+        let ruleta_temp = ruletsData;
+
+        let grados_circulo = 360;
+        let cantCategory = categoryList.length;
+        let premio = grados_circulo / cantCategory;
+
+        let valor_aleatorio = Math.floor(Math.random() * cantCategory);
+        let ruleta_result = premio * valor_aleatorio;
+        let valor_premio = (grados_circulo * 4) + ruleta_result;
+
+        setRuletsData(valor_aleatorio)
+
+        setCategory(categoryList[valor_aleatorio])
+
+
+        setIsRuletaAnimated(true);
+        setRuletaGrados(ruleta_temp * premio)
+
+        setTimeout(() => {
+            setRuletaClass(true);
+            setRuletaGrados(valor_premio);
+        }, 200);
+
+    }
+    const stopRuleta = () => {
+        setRuletaClass(false);
+        setIsRuletaAnimated(false);
+        let name = 'category';
+        setQuiz({ ...quiz, [name]: categorySelected });
+    }
+
+    // ---- RULETA ----
+
+
     const handleChange = (e: any) => {
         const { value, name } = e.target;
         setQuiz({ ...quiz, [name]: value });
@@ -249,6 +321,14 @@ const AppProvider: React.FC<Props> = ({ children }) => {
         quiz,
         handleChange,
         handleSubmit,
+        setRandomUsername,
+        //Ruleta
+        ruletaGrados,
+        isRuletaAnimated,
+        girarRuleta,
+        ruletaClass,
+        stopRuleta,
+        categorySelected,
     };
 
     return (

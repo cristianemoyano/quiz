@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import { AppContext } from "./context";
+import { AppContext, calculateScore } from "./context";
+import { capFirst } from "./utils";
 import Form from "./Components/Form";
 import Loading from "./Components/Loading";
 import Modal from "./Components/Modal";
@@ -12,6 +13,8 @@ const App = () => {
     questions,
     nextQuestion,
     checkAnswer,
+    correct,
+    quiz,
   } = React.useContext(AppContext);
 
   if (waiting) {
@@ -37,10 +40,25 @@ const App = () => {
     answers[num] = correct_answer;
   }
 
+  let score = calculateScore(correct, questions);
+
+  const { username } = quiz;
+
   return (
     <main className="min-h-screen flex items-center justify-center">
       <Modal />
       <div className="p-3 py-5 md:p-8 bg-white shadow rounded-lg max-w-[800px] w-11/12 min-h-[300px]">
+
+        <div className="flex flex-wrap">
+          <div className="w-full sm:w-1/2 mb-4 text-3xl font-medium ">
+            <span className="text-blue-500">{capFirst(username)}</span>
+             
+          </div>
+          <div className="w-full sm:w-1/2 mb-4 text-right text-3xl font-medium p-2">
+            <span className="bg-blue-500 shadow rounded-full p-2 text-white p-2 hover:bg-blue-400"> {score} %</span>
+          </div>
+        </div>
+
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 mb-4 text-green-600">{category} | {difficulty}</div>
           <div className="w-full sm:w-1/2 mb-4 text-right text-green-600">
