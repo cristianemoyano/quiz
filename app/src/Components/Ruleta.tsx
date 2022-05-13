@@ -18,7 +18,7 @@ const Ruleta = () => {
     const category = categorySelected && !isRuletaAnimated ? trivia_categories.find((element: any) => element.id === categorySelected).name : "Buscar...";
     return (
         <div className='p-3 text-center '>
-             <h2 className={`text-2xl font-medium p-3 ${!isRuletaAnimated ? "" : "blurry-text"}`}> {category}</h2>
+             <h2 className={`text-2xl font-medium p-3 ${!isRuletaAnimated ? "" : "blurry-text"} ${categorySelected ? "animated tada" : ""} `}> {category}</h2>
            
             <p className='justify-center flex items-center'>
                 <img
