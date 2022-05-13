@@ -1,7 +1,11 @@
 import axios from "axios";
 import React from "react";
-import { useState, useContext, createContext } from "react";
+import { useState, useEffect, useContext, createContext } from "react";
 import { generateName } from "./utils";
+import correctAnswerAudio from './assets/sounds/correct_answer.mp3'
+import wrongAnswerAudio from './assets/sounds/wrong_answer.mp3'
+import backgroundAudio from './assets/sounds/background.mp3'
+
 
 
 const API_ENDPOINT = "https://opentdb.com/api.php?";
@@ -36,8 +40,9 @@ interface AppContextInterface {
     ruletaClass: boolean;
     stopRuleta: Function;
     categorySelected: number;
-    setRandomUsername: Function
-
+    setRandomUsername: Function;
+    playingBackground: any;
+    toggleBackground: any;
 }
 
 
@@ -80,6 +85,38 @@ const translateQuestions = async (questions: any) => {
 }
 
 
+export const useAudio = (url:string) => {
+    const [audio] = useState(new Audio(url));
+    const [playing, setPlaying] = useState(false);
+
+    const toggle:Function = () => {
+        setPlaying(!playing)
+        audio.loop = true;
+    };
+
+    useEffect(() => {
+        playing ? audio.play() : audio.pause();
+    },
+        [audio, playing]
+    );
+
+    useEffect(() => {
+        audio.addEventListener('ended', () => {
+            // setPlaying(false);
+            // Loop
+            audio.loop=true;
+            audio.currentTime=0;
+        });
+        return () => {
+            audio.removeEventListener('ended', () => {
+                // setPlaying(false);
+            });
+        };
+    }, [audio]);
+
+    return [playing, toggle];
+};
+
 
 
 
@@ -104,6 +141,8 @@ const AppProvider: React.FC<Props> = ({ children }) => {
         type: "any",
         username: "",
     });
+    const [playingBackground, toggleBackground] = useAudio(backgroundAudio);
+
 
     const setRandomUsername = () => {
         let name = 'username';
@@ -189,9 +228,22 @@ const AppProvider: React.FC<Props> = ({ children }) => {
         });
     };
 
+    const playCorrectAnswer = () => {
+        let audio = new Audio(correctAnswerAudio);
+        audio.play();
+    }
+    const playWrongAnswer = () => {
+        let audio = new Audio(wrongAnswerAudio);
+        audio.play();
+    }
+
     const checkAnswer = (value: any) => {
         if (value) {
+
             setCorrect((prev) => prev + 1);
+            playCorrectAnswer();
+        } else {
+            playWrongAnswer();
         }
         nextQuestion();
     };
@@ -322,6 +374,8 @@ const AppProvider: React.FC<Props> = ({ children }) => {
         handleChange,
         handleSubmit,
         setRandomUsername,
+        playingBackground,
+        toggleBackground,
         //Ruleta
         ruletaGrados,
         isRuletaAnimated,
