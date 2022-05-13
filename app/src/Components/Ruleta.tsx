@@ -12,11 +12,11 @@ const Ruleta = () => {
         <div className='p-3 text-center '>
              <h2 className={`text-2xl font-medium p-3 ${!isRuletaAnimated ? "" : "blurry-text"}`}> {category}</h2>
            
-            <p>
+            <p className='justify-center flex items-center'>
                 <img
                     id="img-ruleta"
                     src={ruletaImg}
-                    style={{ transform: 'rotate(' + ruletaGrados + 'deg)', WebkitTransform: 'rotate(' + ruletaGrados + 'deg)', height: 500 }}
+                    style={{ transform: 'rotate(' + ruletaGrados + 'deg)', WebkitTransform: 'rotate(' + ruletaGrados + 'deg)', height: "60%", width: "60%" }}
                     alt="Ruleta"
                     onTransitionEnd={(e)=>{
                         stopRuleta()
